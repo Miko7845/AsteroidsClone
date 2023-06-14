@@ -1,18 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class Bullet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float speed = 20.0f;
+    private float lifeTime = 1.0f;
 
-    // Update is called once per frame
+    private IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
+
     void Update()
     {
-        
+        transform.Translate(speed * Time.deltaTime * Vector2.up);   // Двигаем объект вперед с заданной скоростью и учетом времени кадра
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        DestroySelf();
+    }
+
+    internal void DestroySelf()
+    {
+        pool?.Release(this);                                        // Возвращаем объект в пул
+    }
+
+    private void OnEnable()
+    {
+        Invoke("DestroySelf", lifeTime);                            // Вызываем метод уничтожения объекта через заданное время жизни
+    }
+
+    public void SetPool(IObjectPool<Bullet> bulletPool)
+    {
+        pool = bulletPool;                                          // Устанавливаем пул объектов для снаряда
     }
 }

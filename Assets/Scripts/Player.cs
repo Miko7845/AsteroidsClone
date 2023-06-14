@@ -3,41 +3,43 @@ using UnityEngine.Pool;
 
 public class Player : MonoBehaviour
 {
-    private float verticalInputAcceleration = 5.0f;                                                                         // Ускорение по вертикали при нажатии клавиш.
-    private float horizontalInputAcceleration = 100.0f;                                                                     // Ускорение по горизонтали при нажатии клавиш.
+    [SerializeField] private Bullet bulletPrefab;
 
-    private float maxSpeed = 10.0f;                                                                                         // Максимальная скорость движения.
-    private float maxRotationSpeed = 100.0f;                                                                                // Максимальная скорость поворота.
+    [SerializeField] private float verticalInputAcceleration = 10.0f;                                                       // Ускорение по вертикали при нажатии клавиш.
+    [SerializeField] private float horizontalInputAcceleration = 150.0f;                                                    // Ускорение по горизонтали при нажатии клавиш.
 
-    private float velocityDrag = 1.0f;                                                                                      // Коэффициент замедления скорости.
-    private float rotationDrag = 1.0f;                                                                                      // Коэффициент замедления поворота.
+    [SerializeField] private float maxSpeed = 10.0f;                                                                        // Максимальная скорость движения.
+    [SerializeField] private float maxRotationSpeed = 100.0f;                                                               // Максимальная скорость поворота.
+
+    [SerializeField] private float velocityDrag = 1.0f;                                                                     // Коэффициент замедления скорости.
+    [SerializeField] private float rotationDrag = 1.0f;                                                                     // Коэффициент замедления поворота.
 
     private Vector3 velocity;                                                                                               // Вектор скорости движения.
     private float zRotationVelocity;                                                                                        // Скорость поворота по оси Z.
 
     public bool mouseControlOn = false;                                                                                     // Флаг включения управления мышью.
 
-    //private float shootRate = 3.0f;                                                         // Скорость стрельбы (количество выстрелов в секунду)
-    //private float shootTimer;                                                               // Таймер для контроля скорости стрельбы
+    [SerializeField] private float shootRate = 3f;                                                                          // Скорость стрельбы (количество выстрелов в секунду)
+    private float shootTimer;                                                                                               // Таймер для контроля скорости стрельбы
 
-    //private IObjectPool<Bullet> bulletPool;                                                 // Пул объектов для снарядов
+    private IObjectPool<Bullet> bulletPool;                                                                                 // Пул объектов для снарядов
 
     private void Awake()
     {
-       // bulletPool = new ObjectPool<Bullet>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 5);       // Создаем пул объектов для снарядов с заданными параметрами.
+        bulletPool = new ObjectPool<Bullet>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 5);       // Создаем пул объектов для снарядов с заданными параметрами.
     }
 
     private void Update()
     {
         // Ввод по вертикали.
-        Vector3 acceleration = Input.GetAxis("Vertical") * verticalInputAcceleration * transform.up;                       // Вычисляем вектор ускорения по вертикали в зависимости от нажатой клавиши и направления игрока.
-        velocity += acceleration * Time.deltaTime;                                                                         // Прибавляем ускорение к скорости движения с учетом времени кадра.
+        Vector3 acceleration = Input.GetAxis("Vertical") * verticalInputAcceleration * transform.up;                        // Вычисляем вектор ускорения по вертикали в зависимости от нажатой клавиши и направления игрока.
+        velocity += acceleration * Time.deltaTime;                                                                          // Прибавляем ускорение к скорости движения с учетом времени кадра.
+                                                                                                                            
+        // Ввод по горизонтали                                                                                              
+        float zTurnAcceleration = -1 * Input.GetAxis("Horizontal") * horizontalInputAcceleration;                           // Вычисляем ускорение поворота по оси Z в зависимости от нажатой клавиши и знака минуса (для инверсии направления).
+        zRotationVelocity += zTurnAcceleration * Time.deltaTime;                                                            // Прибавляем ускорение поворота к скорости поворота с учетом времени кадра
 
-        // Ввод по горизонтали
-        float zTurnAcceleration = -1 * Input.GetAxis("Horizontal") * horizontalInputAcceleration;                          // Вычисляем ускорение поворота по оси Z в зависимости от нажатой клавиши и знака минуса (для инверсии направления).
-        zRotationVelocity += zTurnAcceleration * Time.deltaTime;                                                           // Прибавляем ускорение поворота к скорости поворота с учетом времени кадра
-
-     //   Shoot(); // Вызываем метод стрельбы
+        Shoot();
     }
 
     private void FixedUpdate()
@@ -71,5 +73,46 @@ public class Player : MonoBehaviour
         float angle = Vector2.SignedAngle(Vector2.up, direction);                                                           // Вычисляем угол между вертикальным направлением и вектором направления с учетом знака.
         Vector3 targetRotation = new Vector3(0, 0, angle);                                                                  // Создаем вектор целевого поворота из угла
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(targetRotation), maxRotationSpeed * Time.deltaTime); // Поворачиваем игрока к целевому повороту с заданной максимальной скоростью поворота и учетом времени кадра
+    }
+
+    private void OnDestroyBullet(Bullet obj)
+    {
+        Destroy(obj.gameObject);                                                                                            // Уничтожения объекта при удалении из пула
+    }
+
+    private void OnReleaseBullet(Bullet obj)
+    {
+        obj.gameObject.SetActive(false);                                                                                    // Деактивации объекта при возвращении в пул
+    }
+
+    private void OnGetBullet(Bullet obj)
+    {
+        obj.gameObject.SetActive(true);                                                                                     // Aктивации объекта при получении из пула
+        obj.transform.position = transform.position;                                                                        // Установка позиции объекта равной позиции игрока
+        obj.transform.rotation = transform.rotation;                                                                        // Установка поворота объекта равным повороту игрока
+    }
+
+    private Bullet CreateBullet()
+    {
+        Bullet bullet = Instantiate(this.bulletPrefab, this.transform.position, this.transform.rotation);                   // Создания нового объекта bullet
+        bullet.SetPool(this.bulletPool);                                                                                    // Установка ссылки на Pool для данной bullet.
+        return bullet;                                                                                                      // Возвращение созданной пули
+    }
+
+    private void Shoot()
+    {
+        //Shooting rate
+        if (shootTimer >= 0)
+            shootTimer -= Time.deltaTime * shootRate;                                                                       // Уменьшение таймера стрельбы с учетом времени кадра и частоты стрельбы
+
+        //Shoot
+        if (shootTimer <= 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                shootTimer = 1;                                                                                             // Сброс таймера стрельбы на 1 секунду
+                bulletPool?.Get();                                                                                          // Получение объекта bullet из пула (если пул не пуст)
+            }
+        }
     }
 }
