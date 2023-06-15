@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     private Vector3 velocity;                                                                                               // Вектор скорости движения.
     private float zRotationVelocity;                                                                                        // Скорость поворота по оси Z.
 
-    public bool mouseControlOn = false;                                                                                     // Флаг включения управления мышью.
+    [SerializeField] private bool mouseControlOn = false;                                                                   // Флаг включения управления мышью.
 
     [SerializeField] private float shootRate = 3f;                                                                          // Скорость стрельбы (количество выстрелов в секунду)
     private float shootTimer;                                                                                               // Таймер для контроля скорости стрельбы
