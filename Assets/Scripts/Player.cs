@@ -3,27 +3,23 @@ using UnityEngine.Pool;
 
 public class Player : MonoBehaviour
 {
+    private IObjectPool<Bullet> bulletPool;
     [SerializeField] private Bullet bulletPrefab;
 
+    [SerializeField] private bool mouseControlOn = false;                                                                   // Флаг включения управления мышью.
     [SerializeField] private float verticalInputAcceleration = 10.0f;                                                       // Ускорение по вертикали при нажатии клавиш.
     [SerializeField] private float horizontalInputAcceleration = 150.0f;                                                    // Ускорение по горизонтали при нажатии клавиш.
-
     [SerializeField] private float maxSpeed = 10.0f;                                                                        // Максимальная скорость движения.
     [SerializeField] private float maxRotationSpeed = 100.0f;                                                               // Максимальная скорость поворота.
-
     [SerializeField] private float velocityDrag = 1.0f;                                                                     // Коэффициент замедления скорости.
     [SerializeField] private float rotationDrag = 1.0f;                                                                     // Коэффициент замедления поворота.
 
     private Vector3 velocity;                                                                                               // Вектор скорости движения.
     private float zRotationVelocity;                                                                                        // Скорость поворота по оси Z.
-
-    [SerializeField] private bool mouseControlOn = false;                                                                   // Флаг включения управления мышью.
-
     [SerializeField] private float shootRate = 3f;                                                                          // Скорость стрельбы (количество выстрелов в секунду)
     private float shootTimer;                                                                                               // Таймер для контроля скорости стрельбы
 
-    private IObjectPool<Bullet> bulletPool;                                                                                 // Пул объектов для снарядов
-
+    
     private void Awake()
     {
         bulletPool = new ObjectPool<Bullet>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 5);       // Создаем пул объектов для снарядов с заданными параметрами.

@@ -223,13 +223,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 2871089034406675003, guid: 8bfe0e3a36ecfbd47a46b2ccf1d106aa, type: 3}
+  mouseControlOn: 1
   verticalInputAcceleration: 10
   horizontalInputAcceleration: 150
   maxSpeed: 10
-  maxRotationSpeed: 100
+  maxRotationSpeed: 150
   velocityDrag: 1
   rotationDrag: 1
-  mouseControlOn: 0
   shootRate: 3
 --- !u!61 &352251360
 BoxCollider2D:
@@ -260,7 +260,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -349,7 +349,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -411,7 +411,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   asteroidPrefab: {fileID: 8119703101431646573, guid: 23113abd1a2247a44af9f397b813ac8d, type: 3}
   trajectoryVariance: 15
-  spawnRate: 2
   spawnDistance: 25
   spawnWaveAmount: 2
 --- !u!4 &1638337398

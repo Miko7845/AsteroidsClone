@@ -14,12 +14,12 @@ public class SpawnManager : MonoBehaviour
 
         if (asteroidsCount <= 0)
         {
-            SpawnWave(spawnWaveAmount);
+            SpawnWave();
         }
     }
 
     // Cоздани€ астероидов
-    private void SpawnWave(int spawnWaveAmount)
+    private void SpawnWave()
     {
         for (int i = 0; i < spawnWaveAmount; i++)
         {
@@ -30,7 +30,11 @@ public class SpawnManager : MonoBehaviour
             Quaternion rotation = Quaternion.AngleAxis(variance, Vector3.forward);              // —оздаем кватернион дл€ поворота на этот угол вокруг оси Z
 
             Instantiate(asteroidPrefab, spawnPoint, rotation);                                  // —оздаем экземпл€р астероида из префаба в точке по€влени€ с поворотом
-         //   asteroid.SetTrajectory(rotation * -spawnDirection);                                 // ”станавливаем траекторию астероида как противоположную направлению по€влени€ с учетом поворота
+
+         //   asteroid.trajectory = rotation * -spawnDirection;
+         //   asteroid.SetTrajectory(rotation * -spawnDirection);                               // ”станавливаем траекторию астероида как противоположную направлению по€влени€ с учетом поворота
         }
+
+        spawnWaveAmount++;
     }
 }

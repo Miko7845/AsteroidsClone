@@ -3,11 +3,7 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] private float speed = 5.0f;
-
-
-    private void Awake()
-    {
-    }
+    Collider2D hit;
 
     private void Start()
     {
@@ -16,19 +12,29 @@ public class Asteroid : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector2.up * Time.deltaTime * speed);                   // Двигаем объект
+        transform.Translate(Vector3.up * Time.deltaTime * speed);                   // Двигаем объект
+
+        CustomTrigger();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void CustomTrigger()
     {
-        if (other.gameObject.CompareTag("Bullet"))
-        {
-           
-        }
+        hit = Physics2D.OverlapCircle(transform.position, 1.19f);
 
-        if (other.gameObject.CompareTag("Player"))
+        if (hit != null)
         {
-            Debug.Log("Player");
+
+            if (hit.gameObject.CompareTag("Bullet"))
+            {
+                Destroy(gameObject);
+                Destroy(hit.gameObject);
+            }
+
+            if (hit.gameObject.CompareTag("Player"))
+            {
+                Destroy(gameObject);
+                Destroy(hit.gameObject);
+            }
         }
     }
 }
