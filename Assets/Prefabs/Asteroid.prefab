@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6594652581058963683}
   - component: {fileID: 8119703101431646573}
   - component: {fileID: 8453939175603551816}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Asteroid
   m_TagString: Asteroid
   m_Icon: {fileID: 0}
@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3017038224223488614
 SpriteRenderer:

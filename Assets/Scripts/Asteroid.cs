@@ -26,14 +26,17 @@ public class Asteroid : MonoBehaviour
 
             if (hit.gameObject.CompareTag("Bullet"))
             {
+                FindObjectOfType<GameManager>().AsteroidDestroyed(this);
                 Destroy(gameObject);
                 Destroy(hit.gameObject);
             }
 
             if (hit.gameObject.CompareTag("Player"))
             {
+                FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+                FindObjectOfType<GameManager>().PlayerDied();
                 Destroy(gameObject);
-                Destroy(hit.gameObject);
+                hit.gameObject.SetActive(false);
             }
         }
     }
