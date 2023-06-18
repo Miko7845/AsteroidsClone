@@ -2,11 +2,20 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
+    [SerializeField] private Sprite[] sprites;
     [SerializeField] private float speed = 5.0f;
-    Collider2D hit;
+    private Collider2D hit;
+    private SpriteRenderer spriteRenderer;
+
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     private void Start()
     {
+        spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
         transform.eulerAngles = new Vector3(0.0f, 0.0f, Random.value * 360.0f);     // Устанавливаем случайный угол поворота объекта вокруг оси Z
     }
 
