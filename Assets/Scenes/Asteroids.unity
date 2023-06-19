@@ -399,7 +399,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -5348,6 +5348,7 @@ MonoBehaviour:
   asteroidPrefab: {fileID: 8119703101431646573, guid: 23113abd1a2247a44af9f397b813ac8d, type: 3}
   trajectoryVariance: 15
   spawnDistance: 25
+  spawnRate: 2
   spawnWaveAmount: 2
 --- !u!4 &1638337398
 Transform:

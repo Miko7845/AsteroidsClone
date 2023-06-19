@@ -1,16 +1,22 @@
+using System.Drawing;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
-    [SerializeField] private float minSpeed = 3.0f;
-    [SerializeField] private float maxSpeed = 7.0f;
+    [SerializeField] private float minSpeed = 2.0f;
+    [SerializeField] private float maxSpeed = 6.0f;
+
+    [SerializeField] private int splitAmount = 2;
+    [SerializeField] private float minSize = 0.5f;
+    [SerializeField] private float midSize = 1f;
+    [SerializeField] private float maxSize = 2f;
+
+
     private float speed;
     private Collider2D hit;
     private SpriteRenderer spriteRenderer;
-    public float minSize = 0.5f;
-    public float midSize = 1f;
-    public float maxSize = 2f;
+    
 
     private void Awake()
     {
@@ -22,7 +28,7 @@ public class Asteroid : MonoBehaviour
         spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
         transform.eulerAngles = new Vector3(0.0f, 0.0f, Random.value * 360.0f);     // Устанавливаем случайный угол поворота объекта вокруг оси Z
 
-        speed = Random.Range(minSize, maxSize);
+        speed = Random.Range(minSpeed, maxSpeed);
     }
 
     private void Update()
@@ -42,6 +48,12 @@ public class Asteroid : MonoBehaviour
             if (hit.gameObject.CompareTag("Bullet"))
             {
                 FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+
+                if (transform.localScale.y == maxSize)
+                    CreateSplit(midSize);
+                else if (transform.localScale.y == midSize)
+                    CreateSplit(minSize);
+
                 Destroy(gameObject);
                 Destroy(hit.gameObject);
             }
@@ -53,6 +65,18 @@ public class Asteroid : MonoBehaviour
                 Destroy(gameObject);
                 hit.gameObject.SetActive(false);
             }
+        }
+    }
+
+    private void CreateSplit(float size)
+    {
+        for(int i = 0; i < splitAmount; i++)
+        {
+            Vector2 position = transform.position;
+            position += Random.insideUnitCircle * 0.5f;
+
+            Asteroid half = Instantiate(this, position, transform.rotation);
+            half.transform.localScale = Vector3.one * size;
         }
     }
 }

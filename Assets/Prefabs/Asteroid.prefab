@@ -144,12 +144,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af47dfc8e855246b5959d58f55a2e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  asteroid: {fileID: 8119703101431646573}
   sprites:
   - {fileID: 21300000, guid: d11ae1b5fd7c5384bb0b7a2ae4387b72, type: 3}
   - {fileID: 21300000, guid: 298d559d4b6cb7745af747f5496dd2ef, type: 3}
   - {fileID: 21300000, guid: c2f3d585cf72470468ddb8740f4a58a6, type: 3}
   - {fileID: 21300000, guid: d8e02599f099f0c458e4868907ab50b6, type: 3}
-  speed: 3
+  minSpeed: 3
+  maxSpeed: 7
+  splitAmount: 2
+  minSize: 0.5
+  midSize: 1
+  maxSize: 2
 --- !u!114 &8453939175603551816
 MonoBehaviour:
   m_ObjectHideFlags: 0
