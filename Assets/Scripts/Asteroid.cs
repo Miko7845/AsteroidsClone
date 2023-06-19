@@ -3,7 +3,9 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
-    [SerializeField] private float speed = 5.0f;
+    [SerializeField] private float minSpeed = 3.0f;
+    [SerializeField] private float maxSpeed = 7.0f;
+    private float speed;
     private Collider2D hit;
     private SpriteRenderer spriteRenderer;
     public float minSize = 0.5f;
@@ -19,6 +21,8 @@ public class Asteroid : MonoBehaviour
     {
         spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
         transform.eulerAngles = new Vector3(0.0f, 0.0f, Random.value * 360.0f);     // Устанавливаем случайный угол поворота объекта вокруг оси Z
+
+        speed = Random.Range(minSize, maxSize);
     }
 
     private void Update()
