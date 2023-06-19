@@ -6,7 +6,9 @@ public class Asteroid : MonoBehaviour
     [SerializeField] private float speed = 5.0f;
     private Collider2D hit;
     private SpriteRenderer spriteRenderer;
-
+    public float minSize = 0.5f;
+    public float midSize = 1f;
+    public float maxSize = 2f;
 
     private void Awake()
     {

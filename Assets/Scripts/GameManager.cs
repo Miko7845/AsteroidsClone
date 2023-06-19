@@ -4,7 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public Player player;
     public ParticleSystem explosion;
-    public float respawnTime = 3.0f;
+    public float respawnTime = 2.0f;
     public float respawnInvulnerabilityTime = 3.0f;
     public int lives = 3;
     public int score = 0;

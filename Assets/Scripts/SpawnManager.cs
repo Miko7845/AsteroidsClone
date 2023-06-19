@@ -2,19 +2,23 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public Asteroid asteroidPrefab;
-    public float trajectoryVariance = 25.0f;                                                    // ƒл€ хранени€ диапазона отклонени€ траектории астероида в градусах
-    public float spawnDistance = 15.0f;                                                         // –ассто€ни€ от центра экрана, на котором по€вл€ютс€ астероиды
-    public int spawnWaveAmount = 2;
-    int asteroidsCount;
+    [SerializeField] private Asteroid asteroidPrefab;
+    [SerializeField] private float trajectoryVariance = 25.0f;                                  // ƒл€ хранени€ диапазона отклонени€ траектории астероида в градусах
+    [SerializeField] private float spawnDistance = 15.0f;                                       // –ассто€ни€ от центра экрана, на котором по€вл€ютс€ астероиды
+    [SerializeField] private float spawnRate = 2f;                                              // ¬рем€ дл€ спауна
+    [SerializeField] private int spawnWaveAmount = 2;
+
+    private int asteroidsCount;
+    private bool spawnOn = true;                                                                // –азрешение дл€ спаун.                                           
 
     private void Update()
     {
         asteroidsCount = FindObjectsOfType<Asteroid>().Length;
 
-        if (asteroidsCount <= 0)
+        if (asteroidsCount <= 0 & spawnOn)
         {
-            SpawnWave();
+            spawnOn = false;
+            Invoke(nameof(SpawnWave), spawnRate);
         }
     }
 
@@ -35,6 +39,7 @@ public class SpawnManager : MonoBehaviour
          //   asteroid.SetTrajectory(rotation * -spawnDirection);                               // ”станавливаем траекторию астероида как противоположную направлению по€влени€ с учетом поворота
         }
 
+        spawnOn = true;
         spawnWaveAmount++;
     }
 }
