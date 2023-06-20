@@ -9,7 +9,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private int spawnWaveAmount = 2;
 
     private int asteroidsCount;
-    private bool spawnOn = true;                                                                // Разрешение для спаун.                                           
+    private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update                                           
 
     private void Update()
     {
@@ -33,10 +33,8 @@ public class SpawnManager : MonoBehaviour
             float variance = Random.Range(-trajectoryVariance, trajectoryVariance);             // Выбираем случайное отклонение траектории астероида в пределах trajectoryVariance
             Quaternion rotation = Quaternion.AngleAxis(variance, Vector3.forward);              // Создаем кватернион для поворота на этот угол вокруг оси Z
 
-            Instantiate(asteroidPrefab, spawnPoint, rotation);                                  // Создаем экземпляр астероида из префаба в точке появления с поворотом
-
-         //   asteroid.trajectory = rotation * -spawnDirection;
-         //   asteroid.SetTrajectory(rotation * -spawnDirection);                               // Устанавливаем траекторию астероида как противоположную направлению появления с учетом поворота
+            Asteroid asteroid = Instantiate(asteroidPrefab, spawnPoint, rotation);              // Создаем экземпляр астероида из префаба в точке появления с поворотом
+            asteroid.speed = asteroid.GetRandomSpeed(asteroid.minSpeed, asteroid.maxSpeed);     // Устанавливаем рандомный скорость для астероидов
         }
 
         spawnOn = true;

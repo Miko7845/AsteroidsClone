@@ -4,19 +4,17 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] private Sprite[] sprites;
-    [SerializeField] private float minSpeed = 2.0f;
-    [SerializeField] private float maxSpeed = 6.0f;
+    private Collider2D hit;
+    private SpriteRenderer spriteRenderer;
+
+    public float minSpeed = 1.0f;
+    public float maxSpeed = 5.0f;
+    internal float speed;
 
     [SerializeField] private int splitAmount = 2;
     [SerializeField] private float minSize = 0.5f;
     [SerializeField] private float midSize = 1f;
     [SerializeField] private float maxSize = 2f;
-
-
-    private float speed;
-    private Collider2D hit;
-    private SpriteRenderer spriteRenderer;
-    
 
     private void Awake()
     {
@@ -27,8 +25,6 @@ public class Asteroid : MonoBehaviour
     {
         spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
         transform.eulerAngles = new Vector3(0.0f, 0.0f, Random.value * 360.0f);     // Устанавливаем случайный угол поворота объекта вокруг оси Z
-
-        speed = Random.Range(minSpeed, maxSpeed);
     }
 
     private void Update()
@@ -70,6 +66,7 @@ public class Asteroid : MonoBehaviour
 
     private void CreateSplit(float size)
     {
+        float newSpeed = GetRandomSpeed(minSpeed, speed);
         for(int i = 0; i < splitAmount; i++)
         {
             Vector2 position = transform.position;
@@ -77,6 +74,12 @@ public class Asteroid : MonoBehaviour
 
             Asteroid half = Instantiate(this, position, transform.rotation);
             half.transform.localScale = Vector3.one * size;
+            half.speed = newSpeed;                                                                  // Скорость новых астероидов: 1. Одинаковая. 2. Значение случайное. 3. Не больше, чем скорость уничтоженного астероида.
         }
+    }
+
+    public float GetRandomSpeed(float min, float max)
+    {
+        return Random.Range(min, max);
     }
 }
