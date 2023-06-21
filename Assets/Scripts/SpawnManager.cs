@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -8,8 +9,18 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float spawnRate = 2f;                                              // Время для спауна
     [SerializeField] private int spawnWaveAmount = 2;
 
+    [SerializeField] private UFO ufoPrefab;
+    [SerializeField] private float ufoSpawnRateMin = 20f;
+    [SerializeField] private float ufoSpawnRateMax = 40f;
+
+
     private int asteroidsCount;
-    private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update                                           
+    private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update
+
+    private void Start()
+    {
+        InvokeRepeating("SpawnUFO", Random.Range(ufoSpawnRateMin, ufoSpawnRateMax), Random.Range(ufoSpawnRateMin, ufoSpawnRateMax));
+    }
 
     private void Update()
     {
@@ -40,5 +51,13 @@ public class SpawnManager : MonoBehaviour
 
         spawnOn = true;
         spawnWaveAmount++;
+    }
+
+    private void SpawnUFO()
+    {
+        float variance = Random.Range(-trajectoryVariance, trajectoryVariance);             
+        Quaternion rotation = Quaternion.AngleAxis(variance, Vector3.forward);
+
+        UFO ufo = Instantiate(ufoPrefab, new Vector3(1,1,1), rotation);
     }
 }
