@@ -34,6 +34,7 @@ public class SpawnManager : MonoBehaviour
             Quaternion rotation = Quaternion.AngleAxis(variance, Vector3.forward);              // Создаем кватернион для поворота на этот угол вокруг оси Z
 
             Asteroid asteroid = Instantiate(asteroidPrefab, spawnPoint, rotation);              // Создаем экземпляр астероида из префаба в точке появления с поворотом
+            asteroid.transform.eulerAngles = new Vector3(0.0f, 0.0f, Random.value * 360.0f);    // Устанавливаем случайный угол поворота объекта вокруг оси Z
             asteroid.speed = asteroid.GetRandomSpeed(asteroid.minSpeed, asteroid.maxSpeed);     // Устанавливаем рандомный скорость для астероидов
         }
 
