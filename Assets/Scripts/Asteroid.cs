@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    [SerializeField] private Sprite[] sprites;
-    private Collider2D hit;
     private SpriteRenderer spriteRenderer;
-
+    [SerializeField] private Sprite[] sprites;
+    
     public float minSpeed = 1.0f;
     public float maxSpeed = 5.0f;
     internal float speed;
@@ -29,37 +28,29 @@ public class Asteroid : MonoBehaviour
     private void Update()
     {
         transform.Translate(Vector3.up * Time.deltaTime * speed);                   // Двигаем объект
-
-        CustomTrigger();
     }
 
-    private void CustomTrigger()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        hit = Physics2D.OverlapCircle(transform.position, 1.19f);
-
-        if (hit != null)
+        if (other.gameObject.CompareTag("Bullet"))
         {
+            FindObjectOfType<GameManager>().AsteroidDestroyed(this);
 
-            if (hit.gameObject.CompareTag("Bullet"))
-            {
-                FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+            if (transform.localScale.y == maxSize)
+                CreateSplit(midSize);
+            else if (transform.localScale.y == midSize)
+                CreateSplit(minSize);
 
-                if (transform.localScale.y == maxSize)
-                    CreateSplit(midSize);
-                else if (transform.localScale.y == midSize)
-                    CreateSplit(minSize);
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+        }
 
-                Destroy(gameObject);
-                Destroy(hit.gameObject);
-            }
-
-            if (hit.gameObject.CompareTag("Player"))
-            {
-                FindObjectOfType<GameManager>().AsteroidDestroyed(this);
-                FindObjectOfType<GameManager>().PlayerDied();
-                Destroy(gameObject);
-                hit.gameObject.SetActive(false);
-            }
+        if (other.gameObject.CompareTag("Player"))
+        {
+            FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+            FindObjectOfType<GameManager>().PlayerDied();
+            Destroy(gameObject);
+            other.gameObject.SetActive(false);
         }
     }
 
