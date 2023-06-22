@@ -5353,6 +5353,8 @@ MonoBehaviour:
   ufoPrefab: {fileID: 3994778171125356726, guid: 9360edd3edbba2547b5392e9c3c8bafd, type: 3}
   ufoSpawnRateMin: 20
   ufoSpawnRateMax: 40
+  screenHeight: 10
+  widthSides: 18
 --- !u!4 &1638337398
 Transform:
   m_ObjectHideFlags: 0

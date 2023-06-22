@@ -1,18 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UFO : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float speed = 2.0f;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        transform.Translate(transform.right * speed * Time.deltaTime);
     }
 }

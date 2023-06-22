@@ -3,19 +3,25 @@ using UnityEngine.UIElements;
 
 public class SpawnManager : MonoBehaviour
 {
+    // Свойства для Астероидов
     [SerializeField] private Asteroid asteroidPrefab;
     [SerializeField] private float trajectoryVariance = 25.0f;                                  // Для хранения диапазона отклонения траектории астероида в градусах
     [SerializeField] private float spawnDistance = 15.0f;                                       // Расстояния от центра экрана, на котором появляются астероиды
     [SerializeField] private float spawnRate = 2f;                                              // Время для спауна
     [SerializeField] private int spawnWaveAmount = 2;
 
+    private int asteroidsCount;
+    private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update
+
+    // Свойства для НЛО
     [SerializeField] private UFO ufoPrefab;
     [SerializeField] private float ufoSpawnRateMin = 20f;
     [SerializeField] private float ufoSpawnRateMax = 40f;
+    private int spawnSide;
 
-
-    private int asteroidsCount;
-    private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update
+    // Игровая область
+    [SerializeField] private float screenHeight = 10.0f;
+    [SerializeField] private float widthSides = 18.0f;
 
     private void Start()
     {
@@ -55,9 +61,18 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnUFO()
     {
-        float variance = Random.Range(-trajectoryVariance, trajectoryVariance);             
-        Quaternion rotation = Quaternion.AngleAxis(variance, Vector3.forward);
+        UFO ufo = Instantiate(ufoPrefab, RandomUFOPostion(), ufoPrefab.transform.rotation);
+        ufo.speed = spawnSide == 0 ? Mathf.Abs(ufo.speed) : ufo.speed = -ufo.speed;
+    }
 
-        UFO ufo = Instantiate(ufoPrefab, new Vector3(1,1,1), rotation);
+    private Vector2 RandomUFOPostion()
+    {
+        spawnSide = Random.Range(0, 2);
+        widthSides = spawnSide == 0 ? -widthSides : Mathf.Abs(widthSides);
+
+        float height20 = screenHeight - (screenHeight * 0.2f);
+        float randomHeight = Random.Range(-height20, height20);
+
+        return new Vector2(widthSides, randomHeight);
     }
 }
