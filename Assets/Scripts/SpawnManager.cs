@@ -62,7 +62,9 @@ public class SpawnManager : MonoBehaviour
     private void SpawnUFO()
     {
         UFO ufo = Instantiate(ufoPrefab, RandomUFOPostion(), ufoPrefab.transform.rotation);
-        ufo.speed = spawnSide == 0 ? Mathf.Abs(ufo.speed) : ufo.speed = -ufo.speed;
+        ufo.positionToMove = spawnSide == 0 ? 
+            new Vector2(Mathf.Abs(widthSides) + 1, ufo.transform.position.y) : 
+            new Vector2(-widthSides - 1, ufo.transform.position.y);
     }
 
     private Vector2 RandomUFOPostion()

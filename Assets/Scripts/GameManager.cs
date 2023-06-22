@@ -9,6 +9,12 @@ public class GameManager : MonoBehaviour
     public int lives = 3;
     public int score = 0;
 
+    public void UFODestroyed(GameObject ufo)
+    {
+        explosion.transform.position = ufo.transform.position;
+        explosion.Play();
+    }
+
     public void AsteroidDestroyed(Asteroid asteroid)
     {
         explosion.transform.position = asteroid.transform.position;

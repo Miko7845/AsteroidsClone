@@ -1,4 +1,5 @@
 using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
@@ -51,6 +52,12 @@ public class Asteroid : MonoBehaviour
             FindObjectOfType<GameManager>().PlayerDied();
             Destroy(gameObject);
             other.gameObject.SetActive(false);
+        }
+
+        if (other.gameObject.CompareTag("UFO"))
+        {
+            FindObjectOfType<GameManager>().UFODestroyed(other.gameObject);
+            Destroy(other.gameObject);
         }
     }
 
