@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,10 +10,19 @@ public class GameManager : MonoBehaviour
     public int lives = 3;
     public int score = 0;
 
-    public void UFODestroyed(GameObject ufo)
+    // Свойства для НЛО
+    [SerializeField] private UFO ufo;
+    [SerializeField] private float ufoSpawnRateMin = 20f;
+    [SerializeField] private float ufoSpawnRateMax = 40f;
+    private int spawnSide;
+
+    // Игровая область
+    private float screenHeight = 10.0f;
+    private float widthSides = 19.0f;
+
+    private void Start()
     {
-        explosion.transform.position = ufo.transform.position;
-        explosion.Play();
+        StartCoroutine(SpawnUFO());
     }
 
     public void AsteroidDestroyed(Asteroid asteroid)
@@ -56,5 +66,47 @@ public class GameManager : MonoBehaviour
         score = 0;
 
         Invoke(nameof(Respawn), respawnTime);
+    }
+
+    public void UFODestroyed(GameObject ufo)
+    {
+        explosion.transform.position = ufo.transform.position;
+        explosion.Play();
+
+        // Вызываем корутину SpawnUFO после уничтожения НЛО
+        StartCoroutine(SpawnUFO());
+    }
+
+    private IEnumerator SpawnUFO()
+    {
+        // Ждем случайное количество секунд между ufoSpawnRateMin и ufoSpawnRateMax
+        yield return new WaitForSeconds(Random.Range(ufoSpawnRateMin, ufoSpawnRateMax));
+
+        // Проверяем, жив ли НЛО
+        if (ufo.gameObject.activeSelf)
+        {
+            // Если жив, останавливаем корутину
+            StopCoroutine(SpawnUFO());
+        }
+        else
+        {
+            // Если не жив, возрождаем НЛО
+            ufo.gameObject.SetActive(true);
+            ufo.transform.position = RandomUFOPostion();
+            ufo.positionToMove = spawnSide == 0 ?
+                new Vector2((Mathf.Abs(widthSides) + 0.5f), ufo.transform.position.y) :
+                new Vector2((-widthSides - 0.5f), ufo.transform.position.y);
+        }
+    }
+
+    private Vector2 RandomUFOPostion()
+    {
+        spawnSide = Random.Range(0, 2);
+        widthSides = spawnSide == 0 ? -widthSides : Mathf.Abs(widthSides);
+
+        float height20 = screenHeight - (screenHeight * 0.2f);
+        float randomHeight = Random.Range(-height20, height20);
+
+        return new Vector2(widthSides, randomHeight);
     }
 }

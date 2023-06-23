@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Bullet : MonoBehaviour
+public class UFOBullet : MonoBehaviour
 {
     private float speed = 20.0f;
     private float lifeTime = 2.0f;
 
-    private IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
+    private IObjectPool<UFOBullet> pool;                               // Пул объектов для снарядов
 
     void Update()
     {
@@ -28,7 +28,7 @@ public class Bullet : MonoBehaviour
         Invoke("DestroySelf", lifeTime);                            // Вызываем метод уничтожения объекта через заданное время жизни
     }
 
-    public void SetPool(IObjectPool<Bullet> bulletPool)
+    public void SetPool(IObjectPool<UFOBullet> bulletPool)
     {
         pool = bulletPool;                                          // Устанавливаем пул объектов для снаряда
     }

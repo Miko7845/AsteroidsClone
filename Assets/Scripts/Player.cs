@@ -111,4 +111,13 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("UFOBullet"))
+        {
+            FindObjectOfType<GameManager>().PlayerDied();
+            gameObject.SetActive(false);
+        }
+    }
 }

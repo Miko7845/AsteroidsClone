@@ -57,7 +57,7 @@ public class Asteroid : MonoBehaviour
         if (other.gameObject.CompareTag("UFO"))
         {
             FindObjectOfType<GameManager>().UFODestroyed(other.gameObject);
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
         }
     }
 

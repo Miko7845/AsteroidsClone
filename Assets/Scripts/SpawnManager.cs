@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SpawnManager : MonoBehaviour
 {
-    // Свойства для Астероидов
     [SerializeField] private Asteroid asteroidPrefab;
     [SerializeField] private float trajectoryVariance = 25.0f;                                  // Для хранения диапазона отклонения траектории астероида в градусах
     [SerializeField] private float spawnDistance = 15.0f;                                       // Расстояния от центра экрана, на котором появляются астероиды
@@ -12,21 +10,6 @@ public class SpawnManager : MonoBehaviour
 
     private int asteroidsCount;
     private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update
-
-    // Свойства для НЛО
-    [SerializeField] private UFO ufoPrefab;
-    [SerializeField] private float ufoSpawnRateMin = 20f;
-    [SerializeField] private float ufoSpawnRateMax = 40f;
-    private int spawnSide;
-
-    // Игровая область
-    [SerializeField] private float screenHeight = 10.0f;
-    [SerializeField] private float widthSides = 18.0f;
-
-    private void Start()
-    {
-        InvokeRepeating("SpawnUFO", Random.Range(ufoSpawnRateMin, ufoSpawnRateMax), Random.Range(ufoSpawnRateMin, ufoSpawnRateMax));
-    }
 
     private void Update()
     {
@@ -57,24 +40,5 @@ public class SpawnManager : MonoBehaviour
 
         spawnOn = true;
         spawnWaveAmount++;
-    }
-
-    private void SpawnUFO()
-    {
-        UFO ufo = Instantiate(ufoPrefab, RandomUFOPostion(), ufoPrefab.transform.rotation);
-        ufo.positionToMove = spawnSide == 0 ? 
-            new Vector2(Mathf.Abs(widthSides) + 1, ufo.transform.position.y) : 
-            new Vector2(-widthSides - 1, ufo.transform.position.y);
-    }
-
-    private Vector2 RandomUFOPostion()
-    {
-        spawnSide = Random.Range(0, 2);
-        widthSides = spawnSide == 0 ? -widthSides : Mathf.Abs(widthSides);
-
-        float height20 = screenHeight - (screenHeight * 0.2f);
-        float randomHeight = Random.Range(-height20, height20);
-
-        return new Vector2(widthSides, randomHeight);
     }
 }
