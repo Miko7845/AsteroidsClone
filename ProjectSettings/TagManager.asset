@@ -8,6 +8,7 @@ TagManager:
   - Asteroid
   - UFO
   - UFOBullet
+  - Invulnerability
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - Player
   - Bullet
   - Asteroid
-  - Ignore Collisions
+  - Invulnerability
   - 
   - 
   - 

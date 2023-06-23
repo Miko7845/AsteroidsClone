@@ -154,10 +154,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 352251359}
   explosion: {fileID: 1520322539}
-  respawnTime: 3
+  respawnTime: 2
   respawnInvulnerabilityTime: 3
   lives: 3
   score: 0
+  spriteRenderer: {fileID: 352251357}
+  blinkInterval: 0.5
   ufo: {fileID: 8799389732022330466}
   ufoSpawnRateMin: 20
   ufoSpawnRateMax: 40
