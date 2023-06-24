@@ -1,5 +1,3 @@
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
@@ -23,21 +21,22 @@ public class Asteroid : MonoBehaviour
 
     private void Start()
     {
-        spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];
+        spriteRenderer.sprite = sprites[Random.Range(0, sprites.Length)];       // Выбираем случайный спрайт из массива
     }
 
     private void Update()
     {
-        transform.Translate(Vector3.up * Time.deltaTime * speed);                   // Двигаем объект
+        transform.Translate(Vector3.up * Time.deltaTime * speed);               // Двигаем астероид вверх с заданной скоростью
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Bullet"))
         {
-            FindObjectOfType<GameManager>().AsteroidDestroyed(this);
+            FindObjectOfType<GameManager>().AsteroidDestroyed(this);            // Уведомляем GameManager об уничтожении астероида
 
-            if (transform.localScale.y == maxSize)
+            // Если астероид большой или средний, то разделяем его на части
+            if (transform.localScale.y == maxSize)                              
                 CreateSplit(midSize);
             else if (transform.localScale.y == midSize)
                 CreateSplit(minSize);
@@ -48,6 +47,7 @@ public class Asteroid : MonoBehaviour
 
         if (other.gameObject.CompareTag("Player"))
         {
+            // Уведомляем GameManager об уничтожении астероида и игрока
             FindObjectOfType<GameManager>().AsteroidDestroyed(this);
             FindObjectOfType<GameManager>().PlayerDied();
             Destroy(gameObject);
@@ -63,16 +63,17 @@ public class Asteroid : MonoBehaviour
 
     private void CreateSplit(float size)
     {
-        float newSpeed = GetRandomSpeed(minSpeed, speed);
-        for(int i = 0; i < splitAmount; i++)
+        float newSpeed = GetRandomSpeed(minSpeed, speed);                       // Генерируем случайную скорость для частей астероида
+        for (int i = 0; i < splitAmount; i++)
         {
+            // Создаем случайную позицию для части астероида
             Vector2 position = transform.position;
             position += Random.insideUnitCircle * 0.5f;
 
-            Asteroid half = Instantiate(this, position, transform.rotation);
+            Asteroid half = Instantiate(this, position, transform.rotation);    // Создаем копию текущего астероида с новой позицией и поворотом
 
-            half.transform.localScale = Vector3.one * size;
-            half.speed = newSpeed;
+            half.transform.localScale = Vector3.one * size;                     // Задаем размер части астероида
+            half.speed = newSpeed;                                              // Задаем скорость части астероида
 
             // Задаем угол поворота в 45 или -45 градусов по оси y
             float angle = i == 0 ? 45f : -45f;
@@ -82,6 +83,6 @@ public class Asteroid : MonoBehaviour
 
     public float GetRandomSpeed(float min, float max)
     {
-        return Random.Range(min, max);
+        return Random.Range(min, max);                                          // Возвращает случайное число в заданном диапазоне
     }
 }

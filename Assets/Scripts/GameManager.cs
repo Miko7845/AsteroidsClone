@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int score = 0;
 
     [SerializeField] SpriteRenderer spriteRenderer;
-    private Color blinkColor = new Color(0f, 0f, 0f, 255f);             // Цвет спрайта при мигании
-    private Color normalColor = new Color(255f, 255f, 255f, 255f);      // Цвет спрайта при нормальном состоянии
-    [SerializeField] private float blinkInterval = 0.5f;                // Интервал мигания в секундах
-    private float blinkDuration;                                        // Длительность мигания в секундах
-    private bool isBlinking = false;                                    // Флаг, указывающий на то, что персонаж мигает
+    private Color blinkColor = new Color(0f, 0f, 0f, 255f);                            // Цвет спрайта при мигании
+    private Color normalColor = new Color(255f, 255f, 255f, 255f);                     // Цвет спрайта при нормальном состоянии
+    [SerializeField] private float blinkInterval = 0.5f;                               // Интервал мигания в секундах
+    private float blinkDuration;                                                       // Длительность мигания в секундах
+    private bool isBlinking = false;                                                   // Флаг, указывающий на то, что персонаж мигает
 
     // Свойства для НЛО
     [SerializeField] private UFO ufo;
@@ -84,15 +84,15 @@ public class GameManager : MonoBehaviour
     IEnumerator Blink()
     {
         isBlinking = true;                          
-        float startTime = Time.time;                                    // Запоминаем время начала мигания
+        float startTime = Time.time;                                                            // Запоминаем время начала мигания
 
         // Пока не прошло нужное время мигания
         while (Time.time - startTime < blinkDuration)
         {
-            spriteRenderer.color = blinkColor;                          // Меняем цвет спрайта на мигающий
-            yield return new WaitForSeconds(blinkInterval);             // Ждем интервал мигания
-            spriteRenderer.color = normalColor;                         // Меняем цвет спрайта на нормальный
-            yield return new WaitForSeconds(blinkInterval);             // Ждем интервал мигания
+            spriteRenderer.color = blinkColor;                                                  // Меняем цвет спрайта на мигающий
+            yield return new WaitForSeconds(blinkInterval);                                     // Ждем интервал мигания
+            spriteRenderer.color = normalColor;                                                 // Меняем цвет спрайта на нормальный
+            yield return new WaitForSeconds(blinkInterval);                                     // Ждем интервал мигания
         }
 
         isBlinking = false;

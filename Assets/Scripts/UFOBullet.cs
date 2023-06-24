@@ -6,7 +6,7 @@ public class UFOBullet : MonoBehaviour
     private float speed = 20.0f;
     private float lifeTime = 2.0f;
 
-    private IObjectPool<UFOBullet> pool;                               // Пул объектов для снарядов
+    private IObjectPool<UFOBullet> pool;                            // Пул объектов для снарядов
 
     void Update()
     {

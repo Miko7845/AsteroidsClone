@@ -75,23 +75,24 @@ public class UFO : MonoBehaviour
     private void RotateBulletTowardsPlayer(UFOBullet bullet)
     {
         Vector3 direction = player.position - transform.position;                                           // Получаем вектор направления от НЛО к игроку
-        Quaternion rotation = Quaternion.FromToRotation(transform.up, direction);                      // Создаем кватернион из вектора направления НЛО к вектору направления игрока
+        Quaternion rotation = Quaternion.FromToRotation(transform.up, direction);                           // Создаем кватернион из вектора направления НЛО к вектору направления игрока
         bullet.transform.rotation = rotation;                                                               // Присваиваем этот кватернион повороту снаряда
     }
 
+    // Корутина для плавного перемещения объекта к целевой позиции за заданное время
     IEnumerator LerpPosition(Vector2 targetPosition, float duration)
     {
-        float time = 0;
-        Vector2 startPosition = transform.position;
+        float time = 0;                                                                                     // Обнуляем счетчик времени 
+        Vector2 startPosition = transform.position;                                                         // Запоминаем начальную позицию объекта
         while (time < duration)
         {
-            transform.position = Vector2.Lerp(startPosition, targetPosition, time / duration);
-            time += Time.deltaTime;
-            yield return null;
+            transform.position = Vector2.Lerp(startPosition, targetPosition, time / duration);              // Перемещаем объект по линейной интерполяции от начальной до целевой позиции
+            time += Time.deltaTime;                                                                         // Увеличиваем счетчик времени на прошедшее время кадра
+            yield return null;                                                                              // Ждем следующего кадра
         }
-        transform.position = targetPosition;
 
-        gameObject.SetActive(false);
-        FindObjectOfType<GameManager>().UFODestroyed(this.gameObject);
+        transform.position = targetPosition;                                                                // Устанавливаем объект в целевую позицию
+        gameObject.SetActive(false);                                                                        // Деактивируем НЛО
+        FindObjectOfType<GameManager>().UFODestroyed(gameObject);                                           // Уведомляем GameManager об уничтожении НЛО
     }
 }
