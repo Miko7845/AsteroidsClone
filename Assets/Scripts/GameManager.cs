@@ -37,7 +37,12 @@ public class GameManager : MonoBehaviour
         explosion.transform.position = asteroid.transform.position;
         explosion.Play();
 
-        score += 100;
+        if (asteroid.transform.localScale.y == asteroid.maxSize)
+            score = 20;
+        else if (asteroid.transform.localScale.y == asteroid.midSize)
+            score = 50;
+        else
+            score += 100;
     }
 
     public void PlayerDied()
@@ -102,6 +107,7 @@ public class GameManager : MonoBehaviour
     {
         explosion.transform.position = ufo.transform.position;
         explosion.Play();
+        score += 200;
 
         // Вызываем корутину SpawnUFO после уничтожения НЛО
         StartCoroutine(SpawnUFO());

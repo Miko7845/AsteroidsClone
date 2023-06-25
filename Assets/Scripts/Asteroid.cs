@@ -10,9 +10,9 @@ public class Asteroid : MonoBehaviour
     internal float speed;
 
     [SerializeField] private int splitAmount = 2;
-    [SerializeField] private float minSize = 0.5f;
-    [SerializeField] private float midSize = 1f;
-    [SerializeField] private float maxSize = 2f;
+    public float minSize = 0.5f;
+    public float midSize = 1f;
+    public float maxSize = 2f;
 
     private void Awake()
     {

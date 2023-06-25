@@ -95,4 +95,15 @@ public class UFO : MonoBehaviour
         gameObject.SetActive(false);                                                                        // Деактивируем НЛО
         FindObjectOfType<GameManager>().UFODestroyed(gameObject);                                           // Уведомляем GameManager об уничтожении НЛО
     }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Bullet"))
+        {
+            FindObjectOfType<GameManager>().UFODestroyed(this.gameObject);
+            this.gameObject.SetActive(false);
+
+            Destroy(other.gameObject);
+        }
+    }
 }
