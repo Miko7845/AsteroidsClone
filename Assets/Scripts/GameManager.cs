@@ -1,35 +1,44 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private ParticleSystem explosion;
-    [SerializeField] private float respawnTime = 2.0f;
-    [SerializeField] private float respawnInvulnerabilityTime = 3.0f;
-    [SerializeField] private int lives = 3;
-    [SerializeField] private int score = 0;
-
-    [SerializeField] SpriteRenderer spriteRenderer;
-    private Color blinkColor = new Color(0f, 0f, 0f, 255f);                            // Цвет спрайта при мигании
-    private Color normalColor = new Color(255f, 255f, 255f, 255f);                     // Цвет спрайта при нормальном состоянии
-    [SerializeField] private float blinkInterval = 0.5f;                               // Интервал мигания в секундах
+    [SerializeField] Player player;
+    [SerializeField] UFO ufo;
+    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI livesText;
+    private Color blinkColor;                                                          // Цвет спрайта при мигании
+    private Color normalColor;                                                         // Цвет спрайта при нормальном состоянии   
+    private SpriteRenderer playerRenderer;
+    private ParticleSystem explosion;
+    [SerializeField] float ufoSpawnRateMin = 20f;
+    [SerializeField] float ufoSpawnRateMax = 40f;   
+    private float blinkInterval = 0.5f;                                                // Интервал мигания в секундах
     private float blinkDuration;                                                       // Длительность мигания в секундах
-    private bool isBlinking = false;                                                   // Флаг, указывающий на то, что персонаж мигает
-
-    // Свойства для НЛО
-    [SerializeField] private UFO ufo;
-    [SerializeField] private float ufoSpawnRateMin = 20f;
-    [SerializeField] private float ufoSpawnRateMax = 40f;
-    private int spawnSide;
-
-    // Игровая область
     private float screenHeight = 10.0f;
     private float widthSides = 19.0f;
+    private float respawnTime = 2.0f;
+    private float respawnInvulnerabilityTime = 3.0f;
+    private int spawnSide;
+    private int lives = 3;
+    private int score = 0;
+    private bool isBlinking = false;                                                   // Флаг, указывающий на то, что персонаж мигает
+    private bool isGameActive;
+
+    private void Awake()
+    {
+        explosion = GameObject.Find("Explosion").GetComponent<ParticleSystem>();
+        playerRenderer = GameObject.Find("Player").GetComponent<SpriteRenderer>();
+
+        blinkColor = new Color(0f, 0f, 0f, 255f);
+        normalColor = new Color(255f, 255f, 255f, 255f);
+    }
 
     private void Start()
     {
         StartCoroutine(SpawnUFO());
+        StartGame();
     }
 
     public void AsteroidDestroyed(Asteroid asteroid)
@@ -38,19 +47,18 @@ public class GameManager : MonoBehaviour
         explosion.Play();
 
         if (asteroid.transform.localScale.y == asteroid.maxSize)
-            score = 20;
+            UpdateScore(20);
         else if (asteroid.transform.localScale.y == asteroid.midSize)
-            score = 50;
+            UpdateScore(50);
         else
-            score += 100;
+            UpdateScore(100);
     }
 
     public void PlayerDied()
     {
         explosion.transform.position = player.transform.position;
         explosion.Play();
-
-        lives--;
+        UpdateLives(1);
 
         if (lives <= 0)
             GameOver();
@@ -78,12 +86,44 @@ public class GameManager : MonoBehaviour
         player.gameObject.tag = "Player";
     }
 
-    private void GameOver()
+    private void StartGame()
     {
+        isGameActive = true;
         lives = 3;
         score = 0;
 
+        UpdateLives(0);
+        UpdateScore(0);
+    }
+
+    private void GameOver()
+    {
+        isGameActive = false;
+
+        StartGame();
         Invoke(nameof(Respawn), respawnTime);
+    }
+
+    public void UFODestroyed(GameObject ufo)
+    {
+        explosion.transform.position = ufo.transform.position;
+        explosion.Play();
+        UpdateScore(200);
+
+        // Вызываем корутину SpawnUFO после уничтожения НЛО
+        StartCoroutine(SpawnUFO());
+    }
+
+    private void UpdateScore(int value)
+    {
+        score += value;
+        scoreText.text = "Score: " + score.ToString();
+    }
+
+    private void UpdateLives(int value)
+    {
+        lives -= value;
+        livesText.text = "Lives: " + lives.ToString();
     }
 
     IEnumerator Blink()
@@ -94,23 +134,13 @@ public class GameManager : MonoBehaviour
         // Пока не прошло нужное время мигания
         while (Time.time - startTime < blinkDuration)
         {
-            spriteRenderer.color = blinkColor;                                                  // Меняем цвет спрайта на мигающий
+            playerRenderer.color = blinkColor;                                                  // Меняем цвет спрайта на мигающий
             yield return new WaitForSeconds(blinkInterval);                                     // Ждем интервал мигания
-            spriteRenderer.color = normalColor;                                                 // Меняем цвет спрайта на нормальный
+            playerRenderer.color = normalColor;                                                 // Меняем цвет спрайта на нормальный
             yield return new WaitForSeconds(blinkInterval);                                     // Ждем интервал мигания
         }
 
         isBlinking = false;
-    }
-
-    public void UFODestroyed(GameObject ufo)
-    {
-        explosion.transform.position = ufo.transform.position;
-        explosion.Play();
-        score += 200;
-
-        // Вызываем корутину SpawnUFO после уничтожения НЛО
-        StartCoroutine(SpawnUFO());
     }
 
     private IEnumerator SpawnUFO()

@@ -5,20 +5,17 @@ using UnityEngine.Pool;
 public class UFO : MonoBehaviour
 {
     internal Vector2 positionToMove;
-
+    private Transform player;
     private IObjectPool<UFOBullet> bulletPool;
     [SerializeField] private UFOBullet bulletPrefab;
-
     [SerializeField] private float shootRate = 1f;
     [SerializeField] private float shootTimerMin = 2f;
     [SerializeField] private float shootTimerMax = 5f;
     private float shootTimer;
 
-    public Transform player;
-
-
     private void Awake()
     {
+        player = GameObject.Find("Player").GetComponent<Transform>();
         bulletPool = new ObjectPool<UFOBullet>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 2);       // Создаем пул объектов для снарядов с заданными параметрами.
     }
 
@@ -101,7 +98,7 @@ public class UFO : MonoBehaviour
         if (other.gameObject.CompareTag("Bullet"))
         {
             FindObjectOfType<GameManager>().UFODestroyed(this.gameObject);
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
 
             Destroy(other.gameObject);
         }

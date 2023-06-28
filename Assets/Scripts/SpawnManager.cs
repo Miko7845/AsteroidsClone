@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private Asteroid asteroidPrefab;
-    [SerializeField] private float trajectoryVariance = 25.0f;                                  // Для хранения диапазона отклонения траектории астероида в градусах
-    [SerializeField] private float spawnDistance = 15.0f;                                       // Расстояния от центра экрана, на котором появляются астероиды
-    [SerializeField] private float spawnRate = 2f;                                              // Время для спауна
-    [SerializeField] private int spawnWaveAmount = 2;
-
+    [SerializeField] Asteroid asteroidPrefab;                                      
+    [SerializeField] float spawnRate = 2f;                                                      // Время для спауна
+    [SerializeField] int spawnWaveAmount = 2;
+    private float spawnDistance = 15.0f;                                                        // Расстояния от центра экрана, на котором появляются астероиды
+    private float trajectoryVariance = 25.0f;                                                   // Для хранения диапазона отклонения траектории астероида в градусах
     private int asteroidsCount;
     private bool spawnOn = true;                                                                // Разрешение для спаун. Чтобы Invoke сработал лишь один раз в Update
 

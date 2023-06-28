@@ -3,10 +3,9 @@ using UnityEngine.Pool;
 
 public class Bullet : MonoBehaviour
 {
+    private IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
     private float speed = 20.0f;
     private float lifeTime = 2.0f;
-
-    private IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
 
     void Update()
     {

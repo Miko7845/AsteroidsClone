@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    private SpriteRenderer spriteRenderer;
-    [SerializeField] private Sprite[] sprites;
-    
     public float minSpeed = 1.0f;
     public float maxSpeed = 5.0f;
-    internal float speed;
-
-    [SerializeField] private int splitAmount = 2;
     public float minSize = 0.5f;
     public float midSize = 1f;
     public float maxSize = 2f;
+    internal float speed;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] Sprite[] sprites;
+    [SerializeField] int splitAmount = 2;
+    
 
     private void Awake()
     {
