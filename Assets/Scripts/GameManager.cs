@@ -1,7 +1,7 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private float widthSides = 19.0f;
     private float respawnTime = 2.0f;
     private float respawnInvulnerabilityTime = 3.0f;
-    private int spawnSide;
+    private int spawnSide;                                                             // UFO spawn side
     private int lives = 3;
     private int score = 0;
     private bool isBlinking = false;                                                   // Флаг, указывающий на то, что персонаж мигает
@@ -139,8 +139,6 @@ public class GameManager : MonoBehaviour
         PauseGame();
 
         isGameActive = false;
-
-        menu.SetActive(true);
         resume.gameObject.SetActive(false);
     }
 
@@ -161,9 +159,23 @@ public class GameManager : MonoBehaviour
         player.gameObject.tag = "Player";
     }
 
+    public void NewGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        PauseGame();
+    }
+
     public void Resume()
     {
         PauseGame();
+    }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        Application.Quit();
     }
 
     public void ChangeControls()
