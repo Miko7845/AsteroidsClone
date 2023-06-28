@@ -3,10 +3,12 @@ using UnityEngine.Pool;
 
 public class Player : MonoBehaviour
 {
+    public bool mouseControlOn = true;                                                                                     // Флаг включения управления мышью.
+
     private Vector3 velocity;                                                                                               // Вектор скорости движения.
     private IObjectPool<Bullet> bulletPool;
+    private GameManager gameManager;
     [SerializeField] Bullet bulletPrefab;
-    [SerializeField] bool mouseControlOn = false;                                                                           // Флаг включения управления мышью.
     [SerializeField] float verticalInputAcceleration = 10.0f;                                                               // Ускорение по вертикали при нажатии клавиш.
     [SerializeField] float horizontalInputAcceleration = 150.0f;                                                            // Ускорение по горизонтали при нажатии клавиш.
     [SerializeField] float maxSpeed = 10.0f;                                                                                // Максимальная скорость движения.
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour
     
     private void Awake()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         bulletPool = new ObjectPool<Bullet>(CreateBullet, OnGetBullet, OnReleaseBullet, OnDestroyBullet, maxSize: 5);       // Создаем пул объектов для снарядов с заданными параметрами.
     }
 
@@ -38,12 +41,15 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Movement();
+        if(gameManager.isGameActive)
+        {
+            Movement();
 
-        if (mouseControlOn)
-            MouseRotate();
-        else
-            KeyRotate();
+            if (mouseControlOn)
+                MouseRotate();
+            else
+                KeyRotate();
+        }
     }
 
     private void Movement()

@@ -1,13 +1,20 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public bool isGameActive;
+
+    [SerializeField] GameObject menu;
     [SerializeField] Player player;
     [SerializeField] UFO ufo;
     [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI livesText;
+    [SerializeField] Button resume;
+    [SerializeField] TextMeshProUGUI controlsText;
     private Color blinkColor;                                                          // Цвет спрайта при мигании
     private Color normalColor;                                                         // Цвет спрайта при нормальном состоянии   
     private SpriteRenderer playerRenderer;
@@ -24,7 +31,6 @@ public class GameManager : MonoBehaviour
     private int lives = 3;
     private int score = 0;
     private bool isBlinking = false;                                                   // Флаг, указывающий на то, что персонаж мигает
-    private bool isGameActive;
 
     private void Awake()
     {
@@ -39,6 +45,31 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(SpawnUFO());
         StartGame();
+    }
+
+    private void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && isGameActive)
+        {
+            PauseGame();
+        }
+    }
+
+    private void PauseGame()
+    {
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+            isGameActive = false;
+            menu.SetActive(true);
+            resume.gameObject.SetActive(true);
+        }
+        else if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1;
+            isGameActive = true;
+            menu.SetActive(false);
+        }
     }
 
     public void AsteroidDestroyed(Asteroid asteroid)
@@ -66,6 +97,16 @@ public class GameManager : MonoBehaviour
             Invoke(nameof(Respawn), respawnTime);
     }
 
+    public void UFODestroyed(GameObject ufo)
+    {
+        explosion.transform.position = ufo.transform.position;
+        explosion.Play();
+        UpdateScore(200);
+
+        // Вызываем корутину SpawnUFO после уничтожения НЛО
+        StartCoroutine(SpawnUFO());
+    }
+
     private void Respawn()
     {
         player.transform.position = Vector3.zero;
@@ -81,14 +122,11 @@ public class GameManager : MonoBehaviour
         Invoke(nameof(TurnOnCollisions), respawnInvulnerabilityTime);
     }
 
-    private void TurnOnCollisions()
-    {
-        player.gameObject.tag = "Player";
-    }
-
     private void StartGame()
     {
         isGameActive = true;
+        player.transform.position = Vector3.zero;
+        player.gameObject.SetActive(true);
         lives = 3;
         score = 0;
 
@@ -98,20 +136,12 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        PauseGame();
+
         isGameActive = false;
 
-        StartGame();
-        Invoke(nameof(Respawn), respawnTime);
-    }
-
-    public void UFODestroyed(GameObject ufo)
-    {
-        explosion.transform.position = ufo.transform.position;
-        explosion.Play();
-        UpdateScore(200);
-
-        // Вызываем корутину SpawnUFO после уничтожения НЛО
-        StartCoroutine(SpawnUFO());
+        menu.SetActive(true);
+        resume.gameObject.SetActive(false);
     }
 
     private void UpdateScore(int value)
@@ -124,6 +154,30 @@ public class GameManager : MonoBehaviour
     {
         lives -= value;
         livesText.text = "Lives: " + lives.ToString();
+    }
+
+    private void TurnOnCollisions()
+    {
+        player.gameObject.tag = "Player";
+    }
+
+    public void Resume()
+    {
+        PauseGame();
+    }
+
+    public void ChangeControls()
+    {
+        if (player.mouseControlOn)
+        {
+            player.mouseControlOn = false;
+            controlsText.text = "Keyboard";
+        }
+        else
+        {
+            player.mouseControlOn = true;
+            controlsText.text = "Mouse";
+        }
     }
 
     IEnumerator Blink()
