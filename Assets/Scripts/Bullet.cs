@@ -3,32 +3,32 @@ using UnityEngine.Pool;
 
 public class Bullet : MonoBehaviour
 {
-    private IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
-    private float speed = 20.0f;
-    private float lifeTime = 2.0f;
+    IObjectPool<Bullet> pool;                               // Пул объектов для снарядов
+    float speed = 20.0f;
+    float lifeTime = 2.0f;
 
     void Update()
     {
-        transform.Translate(speed * Time.deltaTime * Vector2.up);   // Двигаем объект вперед с заданной скоростью и учетом времени кадра
+        transform.Translate(speed * Time.deltaTime * Vector2.up);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
         DestroySelf();
     }
 
-    internal void DestroySelf()
+    void OnEnable()
     {
-        pool?.Release(this);                                        // Возвращаем объект в пул
+        Invoke("DestroySelf", lifeTime); // Вызываем метод уничтожения объекта через заданное время жизни
     }
 
-    private void OnEnable()
+    internal void DestroySelf()
     {
-        Invoke("DestroySelf", lifeTime);                            // Вызываем метод уничтожения объекта через заданное время жизни
+        pool?.Release(this);    // Возвращаем объект в пул
     }
 
     public void SetPool(IObjectPool<Bullet> bulletPool)
     {
-        pool = bulletPool;                                          // Устанавливаем пул объектов для снаряда
+        pool = bulletPool;  // Устанавливаем пул объектов для снаряда                                     
     }
 }
